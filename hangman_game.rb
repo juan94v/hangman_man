@@ -27,13 +27,20 @@ class Hangman
       ["princesa", "Usa vestido y corona"],
       ["arcoíris", "Tiene muchos colores en el cielo"],
       ["helado", "Es frío y dulce"],
-      ["masha", "Es pequeña y traviesa"],
       ["peluche", "Es suave y se abraza"],
       ["papá", "Te quiere mucho"],
       ["mariposa", "Vuela y tiene alas coloridas"],
       ["castillo", "Donde vive las princesa peach"],
       ["flor", "Es bonita y huele bien"],
       ["globo", "Es redondo y vuela cuando lo inflas"],
+      ["masha", "Niña traviesa y curiosa"],
+      ["oso", "Amigo de Masha, grande y peludo"],
+      ["elsa", "Reina de hielo con poderes mágicos"],
+      ["ana", "Hermana de Elsa, valiente y amorosa"],
+      ["bella", "Joven inteligente y valiente"],
+      ["Arnold", "Tiene cabeza de balón"],
+      ["zenon", "Personaje divertido de la granja"],
+      ["pepe", "Amigo de Zenon, gracioso y alegre"]
     ]
   end
 
@@ -79,6 +86,7 @@ class Hangman
     }
 
     puts "#{message[result].first}#{message[result].last}"
+    system('say "Ganaste, eres muy inteligente"') if result == :win
     system('say "Fin del juego"')
     exit(false)
   end
@@ -103,6 +111,7 @@ class Hangman
   end
 
   def begin
+    print_life
     info_message
     print_treaser
     make_guess
