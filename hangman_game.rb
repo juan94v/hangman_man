@@ -12,6 +12,13 @@ class Hangman
     @word.first.size.times do
       @word_teaser += '_ '
     end
+
+    @COLOR_GREEN = "\e[32m"
+    @COLOR_RED = "\e[31m"
+    @COLOR_PINK = "\e[95m"
+    @COLOR_PURPLE = "\e[35m"
+    @COLOR_ORANGE = "\e[33m"
+    @COLOR_RESET = "\e[0m"
   end
 
   def words
@@ -24,16 +31,16 @@ class Hangman
       ["peluche", "Es suave y se abraza"],
       ["papá", "Te quiere mucho"],
       ["mariposa", "Vuela y tiene alas coloridas"],
-      ["castillo", "Donde viven las princesa peach"],
+      ["castillo", "Donde vive las princesa peach"],
       ["flor", "Es bonita y huele bien"],
       ["globo", "Es redondo y vuela cuando lo inflas"],
     ]
   end
 
   def make_guess
-    win_match if @word.first == @word_teaser.split().join()
+    end_game(:win) if @word.first == @word_teaser.split().join()
 
-    puts "Teclea una letra"
+    puts "#{@COLOR_PINK}Teclea una letra#{@COLOR_RESET}"
     guess = gets.chomp
 
     good_guess = @word.first.include? guess
@@ -41,24 +48,38 @@ class Hangman
     if good_guess
       @good_guess << guess
       
+      system("clear")
+      print_life
+      print "#{@COLOR_GREEN}Adivinaste!#{@COLOR_RESET}"
+      puts "\n"
+      system('say "Adivinaste"')
+
+      info_message
       print_treaser guess
       make_guess
     else
       @lives -= 1
-      game_over if @lives == 0
+      end_game(:lose) if @lives == 0
         
-      puts "Tienes #{@lives} vidas, Intenta de nuevo!"
+      system("clear")
+      print_life
+      puts "#{@COLOR_PURPLE}Tienes #{@lives} vidas, Intenta de nuevo!#{@COLOR_RESET}"
+      system('say "Intenta de nuevo Valeria!"')
+
+      info_message
+      print_treaser guess
       make_guess
     end
   end
 
-  def win_match
-    puts "Felicidades ganaste, eres muy inteligente"
-    exit(false)
-  end
+  def end_game result
+    message = {
+      win: [@COLOR_GREEN, "Felicidades ganaste, eres muy inteligente"],
+      lose: [@COLOR_RED,"Se acabo el Juego"]
+    }
 
-  def game_over
-    puts "Se acabo el Juego"
+    puts "#{message[result].first}#{message[result].last}"
+    system('say "Fin del juego"')
     exit(false)
   end
 
@@ -66,6 +87,7 @@ class Hangman
     update_teaser(last_guess) unless last_guess.nil?
 
     puts @word_teaser
+    puts "\n"
   end
 
   def update_teaser last_guess
@@ -81,10 +103,20 @@ class Hangman
   end
 
   def begin
-    puts "La palabra a adivinar tiene #{@word.first.size} letras"
-    puts "El juego ha comenzado, tu pista es #{@word.last}"
+    info_message
     print_treaser
     make_guess
+  end
+
+  def info_message
+    puts "#{@COLOR_ORANGE}La palabra a adivinar tiene #{@word.first.size} letras"
+    puts "tu pista es #{@word.last}#{@COLOR_RESET}"
+  end
+
+  def print_life
+    heart = "#{@COLOR_RED}\u{2764}#{@COLOR_RESET} "
+    hearts = heart * @lives
+    puts hearts
   end
   
 end
